@@ -1,0 +1,3 @@
+interface:
+  display_name: "CrazySkill"
+  short_description: "Apply your PHP, TypeScript, HBS and SCSS conventions"
