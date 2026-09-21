@@ -98,3 +98,10 @@ For a long condition or parameter list, put each logical operand/argument on its
 Fluent calls often place one call per line and the terminating semicolon on a separate line aligned with the assignment. Preserve this established layout when extending such a chain. A short call need not become a multiline chain.
 
 Multiline ternaries place `?` and `:` on their continuation lines. Align related branches and preserve parentheses that determine precedence. Do not replace an existing condition with a ternary or short-circuit expression just to make it shorter.
+
+## PHPUnit tests
+
+- Match the neighboring test files: descriptive file and class headers with package/author/copyright metadata, title-style method summaries such as `Test Set Body Email Template`, and the `Public method | Preparation` / `Public method | Tests` section banners where applicable.
+- Put fixture/environment setup and cleanup in PHPUnit lifecycle methods when this keeps the test focused on inputs, execution, and assertions. Preserve isolation for global state and caches; use temporary fixture directories rather than application data.
+- Separate logical steps with blank lines and concise `#` action comments, such as `# Set input`, `# Get result`, and `# Assert rendered content`. Do not copy stale descriptions or misspellings from older tests.
+- Narrow DOM query results before using element-only APIs. `DOMNodeList::item()` can return a `DOMNode` or null; check `instanceof DOMElement` and fail the test if needed before accessing `hasAttribute()`, `getAttribute()`, or `childElementCount`. Prefer a real type guard to suppressing Intelephense diagnostics or asserting an unchecked PHPDoc type.
