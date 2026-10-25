@@ -1,6 +1,6 @@
 ---
 name: crazyskill
-description: Apply Kévin Zarshenas's coding conventions when writing, editing, formatting, or reviewing PHP, TypeScript, JavaScript, Handlebars, and SCSS in CrazyPHP, CrazyDemo, and related toolkit projects, or when explicitly requested for another project. Covers indentation, spacing, braces, blank lines, naming, comments and headers, code organization, line wrapping, and import order. Use the crazyphp skill separately for framework behavior and architecture.
+description: Apply Kévin Zarshenas's coding conventions when writing, editing, formatting, or reviewing PHP, TypeScript, JavaScript, Handlebars, and SCSS in CrazyPHP, CrazyDemo, and related toolkit projects, or when explicitly requested for another project. Covers indentation, spacing, braces, blank lines, naming, comments and headers (a mandatory comment above every statement), single return at the end of functions, code organization, line wrapping, and import order. Use the crazyphp skill separately for framework behavior and architecture.
 ---
 
 # CrazySkill
@@ -17,7 +17,7 @@ Apply the author's coding style without changing the behavior of the code. These
 
 ## Common profile
 
-The author confirmed the compact spacing, line-length, single-statement brace, longest-first import, and private-naming rules below. The other defaults consolidate the inspected source. Where the repositories do not establish a single convention, preserve an existing file and make a consistent choice for new code; do not claim a formatter enforces these rules.
+The author confirmed the compact spacing, line-length, single-statement brace, longest-first import, private-naming, comment-per-statement, and single-return rules below. The other defaults consolidate the inspected source. Where the repositories do not establish a single convention, preserve an existing file and make a consistent choice for new code; do not claim a formatter enforces these rules.
 
 | Area           | Convention                                                                                                                                                                                                                    |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -32,9 +32,32 @@ The author confirmed the compact spacing, line-length, single-statement brace, l
 | Names          | PascalCase classes and new types; camelCase variables/functions; UPPER_SNAKE_CASE constants; kebab-case HTML/CSS names; snake_case CrazyPHP partial keys/files.                                                               |
 | Private names  | Use `_camelCase` for new private properties and methods in both PHP and TypeScript: `$_projectName` / `_loadProjects()` in PHP, `_projectName` / `_loadProjects` in TS. Preserve existing contracts when editing older code.  |
 | Strings        | Double quotes by default in new PHP/TS/JS and HTML attributes. Preserve interpolation/escaping behavior and intentional local conventions.                                                                                    |
-| Comments       | Documented file/class/method headers and section banners; concise English comments for logical steps. PHP generally uses `#`, TS/JS `//`, HBS `{{!-- --}}`, SCSS `///` for documentation.                                     |
+| Comments       | Documented file/class/method headers and section banners. **Every PHP/TS/JS statement gets its own comment line directly above it** (see below). PHP uses `#`, TS/JS `//`, HBS `{{!-- --}}`, SCSS `///` for documentation.     |
+| Returns        | **One `return`, as the last statement of the function/method**, returning a `$result` / `result` variable prepared at the top. No early returns or guard-clause returns (see below).                                       |
 
 LF, a final newline, and removal of incidental trailing whitespace are normalization defaults for new or changed source; the original files are not uniformly clean in these respects.
+
+## Mandatory rules: statement comments and single return
+
+These two rules are strict. Apply them to all new PHP and TS/JS code, and to every function or method you create or change. When writing new code, do not treat them as optional or as a matter of local preference.
+
+### A comment above every statement
+
+- Every executable statement has its own comment line immediately above it: assignments, calls, `return`, `continue`, `break`, `throw`, `yield`, `echo`, and every control header (`if`, `foreach`, `for`, `while`, `switch`, `try`). Inside a `switch`, every `case` body follows the same rule.
+- One comment covers one statement, never a group of statements. A statement that spans several lines, such as an array, a fluent chain, or a wrapped call, gets one comment above its first line.
+- The comment is a short English action phrase in sentence case: `# Prepare result`, `# Check project name`, `# Set result`, `# Stop iteration`, `# Return result`. Short phrases are the established form even when they seem obvious. The comment must match what the line does; fix a stale comment when you change the line.
+- After each comment and its statement, leave one blank line before the next comment. In a brace-less one-statement `if`/loop, the body's comment goes on the indented line above the body (see the language examples).
+- Exempt lines: opening and closing braces, `}else{` / `}else if(...){` lines (their bodies carry the comments), blank lines, declarations documented by a docblock (file, class, property, method, constant), `namespace` and `use`/`import` lines inside a documented dependency block, and `declare(strict_types=1)`.
+- HBS and SCSS keep their section and step comments as described in their reference. Do not comment every markup line or CSS declaration.
+
+### Return only at the end
+
+- A function or method that returns a value has exactly one `return`, and it is the last statement of the body. Declare the result variable at the top with its default (`# Prepare result` / `$result = null;`). Then assign it in branches and return it at the end (`# Return result`).
+- Do not use early returns, guard-clause returns, or a `return` inside a loop. Turn a guard into an `if`/`else` that assigns the result or wraps the rest of the body. Turn a return inside a loop into an assignment followed by `break` (PHP `break 2` or a TS labeled `break` for nested loops), so that the first-match behavior stays the same.
+- `void` functions do not use a bare `return;` to exit early. Wrap the remaining work in a condition instead.
+- `throw` is not a return and stays where the error is detected, with its own comment.
+- Allowed exceptions: an arrow callback whose expression body is the value (`item => item.id`, `fn($item) => $item["id"]`); generators, where `yield` is not a return; and a framework contract that requires another shape. Only if the single-exit form truly cannot be written without changing behavior, keep the early return and add a comment that explains why.
+- Restructuring must preserve behavior: code after a former early return must still not run, side effects must keep their order, and `finally` blocks must keep their semantics. Apply the rule to code you write or change. Restructure untouched existing functions only when the user asks for normalization.
 
 ## Use the relevant language reference
 
@@ -54,6 +77,6 @@ LF, a final newline, and removal of incidental trailing whitespace are normaliza
 
 ## Review and verify
 
-For a conventions review, identify concrete deviations with file locations, the applicable rule, and the minimal correction. Distinguish stylistic inconsistencies from correctness problems and from a deliberate legacy convention.
+For a conventions review, always check the two mandatory rules. Report every PHP/TS/JS statement that has no comment directly above it, every comment that covers more than one statement, and every `return` that is not the last statement of its function. Identify concrete deviations with file locations, the applicable rule, and the minimal correction. Distinguish stylistic inconsistencies from correctness problems and from a deliberate legacy convention.
 
-For edits, inspect the diff for unintended reordering or semantic changes. Use an appropriate syntax/type/render check when the change can affect parsing or behavior. Do not add tests that merely match indentation or comment wording. Summarize the applied conventions and any checks actually run.
+For edits, check before finishing that every new or changed statement has its own comment and that each changed function ends with its only `return`. Inspect the diff for unintended reordering or semantic changes. Use an appropriate syntax/type/render check when the change can affect parsing or behavior. Do not add tests that merely match indentation or comment wording. Summarize the applied conventions and any checks actually run.

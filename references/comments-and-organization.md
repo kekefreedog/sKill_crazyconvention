@@ -50,14 +50,27 @@ That tag syntax is PHP-specific. In TS/JS, use the neighboring file's JSDoc/TSDo
 
 Use concise one-line member descriptions such as `/** @var string $name Display name */` in PHP, and the existing JSDoc property style in TS. Use `@param` for parameters rather than inventing parameter tags for ordinary properties.
 
-Logical steps are commonly introduced by an action comment:
+In PHP and TS/JS, **every statement is introduced by its own action comment**. This is mandatory, and the full rule and its exemptions are in `SKILL.md` under "Mandatory rules":
 
-- PHP: `# Get project records`, `# Prepare result`, `# Return result`.
-- TS/JS: `// Get project records`, `// Prepare result`, `// Return result`.
-- HBS: `{{!-- Project collection --}}`.
+- PHP: `# Get project records`, `# Prepare result`, `# Check project name`, `# Continue`, `# Return result`.
+- TS/JS: `// Get project records`, `// Prepare result`, `// Check project name`, `// Return result`.
+- HBS: `{{!-- Project collection --}}` for each meaningful section, not for each line.
 - SCSS: `// Component layout` for source-only notes, or existing `/* ... */` comments when emitted CSS comments are intended.
 
-Keep this descriptive, step-oriented style. Explain behavior, intent, or a non-obvious step accurately; do not manufacture repetitive comments for every token. Comments and the statements they describe form one logical group separated from the next group by a blank line.
+Each comment describes exactly one statement, and its wording must be accurate. Short mechanical phrases such as `# Set result` or `# Stop iteration` are the expected form, not noise to remove. Do not write one comment for a group of statements. Each comment and its single statement form a unit, separated from the next unit by one blank line:
+
+```php
+# Prepare result
+$result = [];
+
+# Get project records
+$projects = $this->_readProjects();
+
+# Return result
+return $result;
+```
+
+Every function that returns a value ends with its only `return`, preceded by a comment such as `# Return result`. See "Return only at the end" in `SKILL.md`.
 
 ## Section separators
 

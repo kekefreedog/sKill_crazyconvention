@@ -19,7 +19,9 @@ Use one space after commas and no padding inside call/parameter parentheses. Def
 
 End imports, calls, assignments, and ordinary variable/property declarations with semicolons. The existing code often omits the optional semicolon after a class arrow-function member's closing brace; follow that surrounding member convention instead of treating it as a syntax defect.
 
-Use a blank line after a method/arrow-body opening brace, before its closing brace, and between logical steps. Small object literals or callbacks may stay inline when they remain clear. Do not rewrite the body of a callback solely to create blank lines.
+Use a blank line after a method/arrow-body opening brace, before its closing brace, and between statements. Small object literals may stay inline when they remain clear.
+
+Every statement has its own `//` comment directly above it, including statements inside callbacks with a block body. Every function that returns a value prepares `result` at the top and ends with its only `return result;`. This applies to block-bodied callbacks too. Only an expression-bodied arrow callback (`project => project.name`) may return implicitly. Do not use early returns, returns inside loops, or a bare `return;` in a `void` method. Assign and `break` instead (use a labeled `break` for nested loops), or wrap the remaining work in a condition. See "Mandatory rules" in `SKILL.md`.
 
 Public/private arrow-function members are common in existing pages and utilities, especially when passed as callbacks. Prototype methods are also used in newer components. Preserve the required `this` binding, lifecycle signature, and override semantics; choosing an arrow field or prototype method is not purely formatting.
 
@@ -31,36 +33,37 @@ Public/private arrow-function members are common in existing pages and utilities
  */
 export default class ProjectLabels {
 
-  /** Public Methods
-   ******************************************************
-   */
+    /** Public Methods
+     ******************************************************
+     */
 
-  /**
-   * Read Labels
-   *
-   * @param projects Project records to inspect
-   * @return Display labels in their original order
-   */
-  public readLabels = (projects: Array<{ name: string }>): string[] => {
+    /**
+     * Read Labels
+     *
+     * @param projects Project records to inspect
+     * @return Display labels in their original order
+     */
+    public readLabels = (projects:Array<{name:string}>):string[] => {
 
-    // Prepare result
-    const result: string[] = [];
+        // Prepare result
+        const result:string[] = [];
 
-    // Read non-empty labels
-    for (const project of projects) {
+        // Read non-empty labels
+        for(const project of projects){
 
-        // Check project name
-        if (project.name)
-            
-            // Push project name to result 
-            result.push(project.name);
+            // Check project name
+            if(project.name)
+
+                // Push project name to result
+                result.push(project.name);
+
+        }
+
+        // Return result
+        return result;
 
     }
 
-    // Return result
-    return result;
-    
-  };
 }
 ```
 

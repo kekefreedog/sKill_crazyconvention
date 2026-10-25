@@ -15,7 +15,7 @@ Apply the spacing, brace, import, and private-naming choices in `SKILL.md`. The 
 
 Compact source uses forms such as `if($enabled){`, `foreach($items as $item){`, and `}else{`. Named typed methods commonly use `public function read(string $name):array {`: no padding inside parentheses, compact return type, and a space before the body brace after the return type. Constructors without a return type commonly use `__construct(...){`. Classes commonly use `class Project {`.
 
-Keep four spaces per block. Use a blank line after opening a method body and before its closing brace; separate commented logical steps by one blank line. Avoid turning existing double or whitespace-filled blank lines into a prescribed style.
+Keep four spaces per block. Every statement has its own `#` comment directly above it, and the only `return` is the last statement (see "Mandatory rules" in `SKILL.md`). Use a blank line after opening a method body and before its closing brace; separate commented logical steps by one blank line. Avoid turning existing double or whitespace-filled blank lines into a prescribed style.
 
 Use one space after commas and around assignments and binary operators. Keep member access tight: `$item->name`, `ClassName::method()`. Default to double-quoted strings when no existing local convention dictates otherwise; single quotes can keep interpolation literal or avoid unnecessary escapes. Preserve the behavior of existing literals.
 
@@ -91,6 +91,55 @@ class ProjectLabels {
 
 This example omits the full file metadata for focus; standalone source files use the documented file header.
 
+## Single return at the end
+
+Every method or function that returns a value prepares `$result` at the top and returns it as its last statement. Rewrite early returns and returns inside loops as assignments.
+
+Not allowed:
+
+```php
+public function findLabel(array $projects, string $id):string|null {
+    if(empty($projects))
+        return null;
+    foreach($projects as $project)
+        if(($project["id"] ?? null) === $id)
+            return $project["name"] ?? null;
+    return null;
+}
+```
+
+Required:
+
+```php
+public function findLabel(array $projects, string $id):string|null {
+
+    # Prepare result
+    $result = null;
+
+    # Iterate projects
+    foreach($projects as $project){
+
+        # Check matching project
+        if(($project["id"] ?? null) === $id){
+
+            # Set result
+            $result = $project["name"] ?? null;
+
+            # Stop iteration
+            break;
+
+        }
+
+    }
+
+    # Return result
+    return $result;
+
+}
+```
+
+The `empty($projects)` guard is gone because the loop already handles an empty array. When a guard protects later work, wrap that work in `if(...){ ... }` or use `if/else`. `break` keeps the first-match behavior of the former early return. Inside nested loops, use `break 2`.
+
 ## Wrapping expressions
 
 For a long condition or parameter list, put each logical operand/argument on its own indented line and align the closing delimiter with the start of the statement. Keep logical operators in a consistent position. Do not split a literal value merely to satisfy a column target.
@@ -103,5 +152,5 @@ Multiline ternaries place `?` and `:` on their continuation lines. Align related
 
 - Match the neighboring test files: descriptive file and class headers with package/author/copyright metadata, title-style method summaries such as `Test Set Body Email Template`, and the `Public method | Preparation` / `Public method | Tests` section banners where applicable.
 - Put fixture/environment setup and cleanup in PHPUnit lifecycle methods when this keeps the test focused on inputs, execution, and assertions. Preserve isolation for global state and caches; use temporary fixture directories rather than application data.
-- Separate logical steps with blank lines and concise `#` action comments, such as `# Set input`, `# Get result`, and `# Assert rendered content`. Do not copy stale descriptions or misspellings from older tests.
+- Give every statement its own concise `#` action comment and separate statements with blank lines, such as `# Set input`, `# Get result`, and `# Assert rendered content`. Do not copy stale descriptions or misspellings from older tests.
 - Narrow DOM query results before using element-only APIs. `DOMNodeList::item()` can return a `DOMNode` or null; check `instanceof DOMElement` and fail the test if needed before accessing `hasAttribute()`, `getAttribute()`, or `childElementCount`. Prefer a real type guard to suppressing Intelephense diagnostics or asserting an unchecked PHPDoc type.

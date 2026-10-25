@@ -57,22 +57,22 @@ $project-card-gap: 1rem;
 ///
 
 .project-collection {
-  display: grid;
-  gap: $project-card-gap;
+    display: grid;
+    gap: $project-card-gap;
 
-  &--compact {
-    gap: 0.5rem;
-  }
+    &--compact {
+        gap: 0.5rem;
+    }
 }
 
 .project-card {
-  padding: 1rem;
-  border: 1px solid currentColor;
+    padding: 1rem;
+    border: 1px solid currentColor;
 
-  h2 {
-    margin: 0;
-    font-weight: 600;
-  }
+    h2 {
+        margin: 0;
+        font-weight: 600;
+    }
 }
 ```
 
