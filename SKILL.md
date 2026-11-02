@@ -29,7 +29,7 @@ The author confirmed the compact spacing, line-length, single-statement brace, l
 | Blank lines    | One blank line around logical steps, between documented members, and inside nontrivial method bodies at the opening/closing boundaries. Do not reproduce runs of empty lines.                                                 |
 | Line length    | No fixed maximum; wrap for readability. Break long signatures, arguments, conditions, arrays, and attributes at readable structural boundaries. Preserve literal/template content when wrapping would alter it.               |
 | Imports        | Longest declaration to shortest within an independent dependency block; preserve equal-length order. Keep multiline declarations as units. Preserve side-effect and dependency ordering.                                      |
-| Names          | PascalCase classes and new types; camelCase variables/functions; UPPER_SNAKE_CASE constants; kebab-case HTML/CSS names; snake_case CrazyPHP partial keys/files.                                                               |
+| Names          | TypeScript classes and their class-module filenames start with a lowercase letter (lower camelCase); PHP classes and new interfaces/type aliases use PascalCase; camelCase variables/functions; UPPER_SNAKE_CASE constants; kebab-case HTML/CSS names; snake_case CrazyPHP partial keys/files.                                                               |
 | Private names  | Use `_camelCase` for new private properties and methods in both PHP and TypeScript: `$_projectName` / `_loadProjects()` in PHP, `_projectName` / `_loadProjects` in TS. Preserve existing contracts when editing older code.  |
 | Strings        | Double quotes by default in new PHP/TS/JS and HTML attributes. Preserve interpolation/escaping behavior and intentional local conventions.                                                                                    |
 | Comments       | Documented file/class/method headers and section banners. **Every PHP/TS/JS statement gets its own comment line directly above it** (see below). PHP uses `#`, TS/JS `//`, HBS `{{!-- --}}`, SCSS `///` for documentation.     |
@@ -74,6 +74,24 @@ These two rules are strict. Apply them to all new PHP and TS/JS code, and to eve
 - Keep method/reference names required by frameworks, routes, reflected properties, and external schemas. Fixing capitalization or adding a private underscore can be a breaking change.
 - Preserve HBS inline spacing, escaping, attribute conditionals, and helper context. Preserve SCSS import/cascade order and TS callback `this` binding.
 - Do not blindly run a default Prettier or PHP formatter over these projects: its output may differ from the selected conventions. Use a project's configured formatter when applicable; adding a formatter or changing its rules is a separate task.
+
+## Required PHP completeness check
+
+When creating a PHP class or explicitly bringing one into compliance, read both the PHP reference and Comments and organization reference. Statement comments and a single final return are necessary but do not constitute full compliance. Small controllers and asset endpoints follow the same documentation and layout requirements as larger classes.
+
+Before declaring the file compliant, inspect all of the following:
+
+- Use a full multiline file header: descriptive title, purpose, actual project package identity, author and copyright. Include an accurate PHP target version when known; do not copy the library package identity into an application file.
+- Use multiline dependency and class documentation blocks. A one-line summary is not a substitute for the standalone file header or class documentation.
+- Add the appropriate member section banner, such as `Public Static Methods`, even when that section contains only one method.
+- Give each method a multiline docblock with an action title, useful description, and applicable `@param` and `@return` tags. Document response-sending methods as returning void without adding a value return or changing inherited signatures solely for formatting.
+- Wrap long compound conditions with each logical operand on its own line; split nested argument lists when needed for readability.
+- Wrap function and method calls with many arguments or bulky arguments (especially inline associative arrays): put one argument per line, expand array entries onto separate indented lines, and put the closing `);` on its own line. See the PHP reference for the required layout.
+- Use double-quoted PHP strings by default, including regular expressions when doing so preserves escaping and interpolation semantics.
+- Format multiline fluent calls with one call per line and the terminating semicolon on its own line, aligned with the start of the statement.
+- Confirm statement comments, compact spacing, four-space indentation, blank lines, and the single final return rule for methods that return values.
+
+Apply these checks without changing runtime behavior or reformatting unrelated files. Do not claim strict compliance based only on a syntax check; review the documentation and layout as well.
 
 ## Review and verify
 

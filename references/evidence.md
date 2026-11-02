@@ -10,7 +10,7 @@ Canonical library: [kekefreedog/CrazyPHP](https://github.com/kekefreedog/CrazyPH
 - LF line endings; existing files are inconsistent about the final newline and trailing whitespace.
 - Opening braces on the declaration/control line, including PHP classes. Existing source is not uniformly PSR-12 or Prettier output.
 - Blank lines inside method bodies and between commented logical steps.
-- PascalCase class names, camelCase variables and functions, uppercase constant names; private underscores are common but historically inconsistent.
+- Historical source includes PascalCase class names. The author explicitly requires TypeScript class names to start with a lowercase letter (lower camelCase); this takes precedence over those older examples. PHP classes retain PascalCase. Variables and functions use camelCase, constants use uppercase names, and private underscores are common but historically inconsistent.
 - Most multi-import sections tend toward longest line first, with exceptions and interleaved asset loads.
 - The language-specific headers and separator banners in `docs/Src/CommentHeaders.md`.
 

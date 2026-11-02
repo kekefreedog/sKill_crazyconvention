@@ -4,7 +4,7 @@ Apply the common profile in `SKILL.md`. TypeScript examples use the compact type
 
 ## Names and module layout
 
-- Use PascalCase for classes, new interfaces/type aliases, and class-module filenames. Preserve established lower-camel ambient framework types such as `stateEvent` instead of renaming public contracts.
+- TypeScript class names must start with a lowercase letter and use lower camelCase, for example `ingestOutsource`, `minimizeXlsx`, `reprocessPlaylist`, and `setupOutsourceCli`. Match standalone TypeScript class-module filenames to the class name and update imports and constructor references when renaming. Keep new interfaces/type aliases in PascalCase and preserve established ambient framework types such as `stateEvent`. Preserve imported dependency names and framework-required identifiers.
 - Use camelCase for functions, variables, parameters, and ordinary members: `projectCount`, `currentProject`, `readProjects`. New private TypeScript properties and methods use `_camelCase`, such as `_projectName` and `_loadProjects`; do not add underscores to ordinary local variables.
 - Use `UPPER_SNAKE_CASE` for true shared constants, such as `DEFAULT_OPTIONS`; a local `const` variable remains camelCase. Framework static properties such as `className`, `html`, `template`, and `styles` keep their declared API names.
 - Keep existing utility/function modules' lower-camel filenames. CrazyPHP page/component folders use PascalCase with `index.ts`, `template.hbs`, and `style.scss`; do not flatten or rename that layout as a style correction.
@@ -31,7 +31,7 @@ Public/private arrow-function members are common in existing pages and utilities
  *
  * Read display labels from a collection of project records.
  */
-export default class ProjectLabels {
+export default class projectLabels {
 
     /** Public Methods
      ******************************************************

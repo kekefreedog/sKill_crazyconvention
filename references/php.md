@@ -148,6 +148,24 @@ Fluent calls often place one call per line and the terminating semicolon on a se
 
 Multiline ternaries place `?` and `:` on their continuation lines. Align related branches and preserve parentheses that determine precedence. Do not replace an existing condition with a ternary or short-circuit expression just to make it shorter.
 
+### Calls with many or bulky arguments
+
+Do not compress a long function or method call onto one line, especially when an argument is an associative array. Put each argument on its own line, expand the array with one entry per line, and align the closing `);` with the start of the call statement. Apply this based on readability rather than a fixed argument count; short simple calls may stay on one line. Keep the statement's comment directly above the assignment or call.
+
+```php
+# Keep the image beyond the project response lifetime
+$stored = $cache->set(
+    "asset.image.".$id,
+    [
+        "bytes" => $bytes,
+        "mime"  => $image["mime"]
+    ],
+    90000
+);
+```
+
+This call layout is distinct from a multiline fluent chain, whose terminating semicolon goes on its own line after the final chained call.
+
 ## PHPUnit tests
 
 - Match the neighboring test files: descriptive file and class headers with package/author/copyright metadata, title-style method summaries such as `Test Set Body Email Template`, and the `Public method | Preparation` / `Public method | Tests` section banners where applicable.
